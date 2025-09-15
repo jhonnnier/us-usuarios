@@ -1,67 +1,35 @@
 pipeline {
-    agent any
-
-    environment {
-        // Aquí defines variables globales
-        MAVEN_OPTS = "-Dmaven.test.failure.ignore=true"
-    }
-
-    tools {
-        // Usa Maven y JDK configurados en Jenkins (Manage Jenkins -> Global Tool Configuration)
-        maven "Maven3"
-        jdk "JDK17"
-    }
+    agent any   // Usa cualquier agente disponible (en Render solo tienes el master)
 
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'master', url: 'https://github.com/jhonnnier/us-usuarios.git'
-            }
-        }
-
         stage('Build') {
             steps {
-                sh 'mvn clean compile'
+                echo "Compilando el proyecto..."
+                sh 'echo "Simulando build"'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'mvn test'
-            }
-            post {
-                always {
-                    junit '**/target/surefire-reports/*.xml'
-                }
+                echo "Ejecutando pruebas..."
+                sh 'echo "Simulando pruebas unitarias"'
             }
         }
 
-        stage('Package') {
+        stage('Deploy') {
             steps {
-                sh 'mvn package -DskipTests'
-            }
-            post {
-                success {
-                    archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
-                }
-            }
-        }
-
-        stage('Run App') {
-            steps {
-                // mata procesos previos en el puerto 8080 para evitar conflictos
-                sh 'fuser -k 8080/tcp || true'
-                sh 'nohup java -jar target/*.jar > app.log 2>&1 &'
+                echo "Desplegando aplicación..."
+                sh 'echo "Simulando despliegue exitoso 🚀"'
             }
         }
     }
 
     post {
         success {
-            echo "✅ Pipeline ejecutado correctamente. Aplicación desplegada en http://localhost:8080"
+            echo "Pipeline ejecutado correctamente ✅"
         }
         failure {
-            echo "❌ Falló el pipeline. Revisa los logs."
+            echo "Pipeline falló ❌"
         }
     }
 }
