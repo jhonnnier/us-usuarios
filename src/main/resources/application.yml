@@ -1,18 +1,25 @@
 spring:
   application:
     name: usuarios
+
   datasource:
-    url: jdbc:mysql://192.168.1.19:9999/db_usuarios?useSSL=false&serverTimezone=UTC
+    url: jdbc:postgresql://192.168.1.19:5432/db_usuarios
     username: root
     password: root
+    driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-    defer-datasource-initialization: true
+      ddl-auto: update   # crea/actualiza tablas según tus entidades
+    defer-datasource-initialization: true  # 👈 fuerza que Hibernate cree el schema antes de correr data.sql
+    show-sql: true       # opcional, para ver las queries en consola
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
   sql:
     init:
       mode: always
+    # controlas el orden de ejecución de scripts
+    continue-on-error: true   # opcional, evita que falle si zla tabla aún no existe
+
 server:
-  port: 8081
+  port: 8082
